@@ -117,8 +117,7 @@ fn main() -> eframe::Result {
         // Get the default input format
         let config = device.default_input_config().expect("Failed to get default input format");
 
-        println!("channels = {}", config.channels());
-        std::thread::sleep(Duration::from_millis(500));
+        let channels: usize = config.channels() as usize;
 
         println!("Using input device: {:?}", device.name());
         println!("Input format: {:?}", config);
@@ -159,7 +158,7 @@ fn main() -> eframe::Result {
 
             if data.iter().count() >= 882 * 4 {
                 
-                let new_data = data.iter().enumerate().filter(|(x,_)| x % 2 == 0).map(|(_, y)| y.clone()).collect();
+                let new_data = data.iter().enumerate().filter(|(x,_)| x % channels == 0).map(|(_, y)| y.clone()).collect();
                 let result = f0_estimation(new_data);
                 println!("pitch = {:?}", result);
                 let mut value = shared_values.lock().unwrap();
